@@ -73,6 +73,14 @@ WORKSPACE_PGID=1000
 WORKSPACE_TIMEZONE=UTC
 WORKSPACE_SSH_PORT=2222
 
+### NODE ###############################################
+
+NODE_INTL=true
+NODE_IMAGEMAGICK=true
+NODE_IMAGE_OPTIMIZERS=true
+NODE_GHOSTSCRIPT=false
+NODE_INSTALL_PG_CLIENT=false
+
 ### MYSQL #################################################
 
 MYSQL_VERSION=latest
