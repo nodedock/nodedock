@@ -241,3 +241,22 @@ services:
         - backend
       depends_on:
         - mongo
+### Beanstalkd ###########################################
+    beanstalkd:
+      build: ./beanstalkd
+      ports:
+        - "${BEANSTALKD_HOST_PORT}:11300"
+      privileged: true
+      depends_on:
+        - php-fpm
+      networks:
+        - backend
+### Beanstalkd Console ###################################
+    beanstalkd-console:
+      build: ./beanstalkd-console
+      ports:
+        - "${BEANSTALKD_CONSOLE_HOST_PORT}:2080"
+      depends_on:
+        - beanstalkd
+      networks:
+        - backend

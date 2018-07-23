@@ -148,3 +148,13 @@ MONGO_WEBUI_PORT=3000
 MONGO_WEBUI_ROOT_URL=http://localhost
 MONGO_WEBUI_MONGO_URL=mongodb://mongo:27017/
 MONGO_WEBUI_INSTALL_MONGO=false
+
+### BEANSTALKD CONSOLE ####################################
+
+BEANSTALKD_CONSOLE_BUILD_PATH=./beanstalkd-console
+BEANSTALKD_CONSOLE_CONTAINER_NAME=beanstalkd-console
+BEANSTALKD_CONSOLE_HOST_PORT=2080
+
+### BEANSTALKD ############################################
+
+BEANSTALKD_HOST_PORT=11300
