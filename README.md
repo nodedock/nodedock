@@ -8,7 +8,7 @@ I'm an ex-PHP developer, and I've used to use Laradock and similar solutions a l
 
 ## Based on Laradock
 
-This project is based on awesome [Laradock](https://github.com/laradock/laradock), [contributors](https://github.com/laradock/laradock/graphs/contributors)
+This project is based on awesome [Laradock](https://github.com/laradock/laradock) ([contributors](https://github.com/laradock/laradock/graphs/contributors))
 
 # LICENSE
 
