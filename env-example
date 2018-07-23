@@ -98,3 +98,21 @@ RABBITMQ_MANAGEMENT_HTTP_HOST_PORT=15672
 RABBITMQ_MANAGEMENT_HTTPS_HOST_PORT=15671
 RABBITMQ_DEFAULT_USER=guest
 RABBITMQ_DEFAULT_PASS=guest
+
+### ADMINER ###############################################
+
+ADM_PORT=8080
+ADM_INSTALL_MSSQL=false
+
+### PHP MY ADMIN ##########################################
+
+# Accepted values: mariadb - mysql
+
+PMA_DB_ENGINE=mysql
+
+# Credentials/Port:
+
+PMA_USER=default
+PMA_PASSWORD=secret
+PMA_ROOT_PASSWORD=secret
+PMA_PORT=8080

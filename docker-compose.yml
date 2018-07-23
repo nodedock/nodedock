@@ -135,3 +135,31 @@ services:
         - php-fpm
       networks:
         - backend
+### phpMyAdmin ###########################################
+    phpmyadmin:
+      build: ./phpmyadmin
+      environment:
+        - PMA_ARBITRARY=1
+        - MYSQL_USER=${PMA_USER}
+        - MYSQL_PASSWORD=${PMA_PASSWORD}
+        - MYSQL_ROOT_PASSWORD=${PMA_ROOT_PASSWORD}
+      ports:
+        - "${PMA_PORT}:80"
+      depends_on:
+        - "${PMA_DB_ENGINE}"
+      networks:
+        - frontend
+        - backend
+### Adminer ###########################################
+    adminer:
+      build:
+        context: ./adminer
+        args:
+          - INSTALL_MSSQL=${ADM_INSTALL_MSSQL}
+      ports:
+        - "${ADM_PORT}:8080"
+      depends_on:
+        - php-fpm
+      networks:
+        - frontend
+        - backend
