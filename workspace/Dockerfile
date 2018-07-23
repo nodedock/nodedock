@@ -2,8 +2,6 @@ ARG NODE_VERSION=${NODE_VERSION}
 
 FROM phusion/baseimage:latest
 
-LABEL maintainer="Valerii Iatsko <viatsko@viatsko.me>"
-
 # Set Environment Variables
 ENV DEBIAN_FRONTEND noninteractive
 
