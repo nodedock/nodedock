@@ -58,6 +58,7 @@ services:
       networks:
         - frontend
         - backend
+
 ### MySQL ################################################
     mysql:
       build:
@@ -77,6 +78,7 @@ services:
         - "${MYSQL_PORT}:3306"
       networks:
         - backend
+
 ### PostgreSQL ###########################################
     postgres:
       build: ./postgres
@@ -91,6 +93,7 @@ services:
         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       networks:
         - backend
+
 ### PostgreSQL PostGis ###################################
     postgres-postgis:
       build: ./postgres-postgis
@@ -104,6 +107,7 @@ services:
         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       networks:
         - backend
+
 ### RabbitMQ #############################################
     rabbitmq:
       build: ./rabbitmq
@@ -119,6 +123,7 @@ services:
         - php-fpm
       networks:
         - backend
+
 ### phpMyAdmin ###########################################
     phpmyadmin:
       build: ./phpmyadmin
@@ -134,6 +139,7 @@ services:
       networks:
         - frontend
         - backend
+
 ### Adminer ###########################################
     adminer:
       build:
@@ -147,6 +153,7 @@ services:
       networks:
         - frontend
         - backend
+
 ### Redis ################################################
     redis:
       build: ./redis
@@ -156,6 +163,7 @@ services:
         - "${REDIS_PORT}:6379"
       networks:
         - backend
+
 ### PHPRedisAdmin ################################################
     phpredisadmin:
       image: erikdubbelboer/phpredisadmin:latest
@@ -170,6 +178,7 @@ services:
         - "${REDIS_WEBUI_PORT}:80"
       depends_on:
         - redis
+
 ### Mailhog ################################################
     mailhog:
       build: ./mailhog
@@ -179,6 +188,7 @@ services:
       networks:
         - frontend
         - backend
+
 ### MailDev ##############################################
     maildev:
       build: ./maildev
@@ -188,6 +198,7 @@ services:
       networks:
         - frontend
         - backend
+
 ### Memcached ############################################
     memcached:
       build: ./memcached
@@ -199,6 +210,7 @@ services:
         - php-fpm
       networks:
         - backend
+
 ### MongoDB ##############################################
     mongo:
       build: ./mongo
@@ -208,6 +220,7 @@ services:
         - ${DATA_PATH_HOST}/mongo:/data/db
       networks:
         - backend
+
 ### MongoWebUI ################################################
     mongo-webui:
       build:
@@ -225,6 +238,7 @@ services:
         - backend
       depends_on:
         - mongo
+
 ### Beanstalkd ###########################################
     beanstalkd:
       build: ./beanstalkd
@@ -235,6 +249,7 @@ services:
         - php-fpm
       networks:
         - backend
+
 ### Beanstalkd Console ###################################
     beanstalkd-console:
       build: ./beanstalkd-console
@@ -244,6 +259,7 @@ services:
         - beanstalkd
       networks:
         - backend
+
 ### ElasticSearch ########################################
     elasticsearch:
       build: ./elasticsearch
