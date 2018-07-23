@@ -75,11 +75,11 @@ WORKSPACE_SSH_PORT=2222
 
 ### NODE ###############################################
 
-NODE_INTL=true
-NODE_IMAGEMAGICK=true
-NODE_IMAGE_OPTIMIZERS=true
-NODE_GHOSTSCRIPT=false
-NODE_INSTALL_PG_CLIENT=false
+NODE_INSTALL_INTL=true
+NODE_INSTALL_IMAGEMAGICK=true
+NODE_INSTALL_IMAGE_OPTIMIZERS=true
+NODE_INSTALL_GHOSTSCRIPT=false
+NODE_PG_CLIENT=false
 
 ### MYSQL #################################################
 
@@ -166,3 +166,8 @@ BEANSTALKD_CONSOLE_HOST_PORT=2080
 ### BEANSTALKD ############################################
 
 BEANSTALKD_HOST_PORT=11300
+
+### ELASTICSEARCH #########################################
+
+ELASTICSEARCH_HOST_HTTP_PORT=9200
+ELASTICSEARCH_HOST_TRANSPORT_PORT=9300

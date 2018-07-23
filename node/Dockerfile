@@ -212,10 +212,13 @@ RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     rm /var/log/lastlog /var/log/faillog
 
-RUN usermod -u 1000 www-data
+USER nodedock
 
 WORKDIR /var/www
 
-CMD ["npm start"]
+# Source the bash before running npm start
+RUN . ~/.bashrc
+
+CMD ["npm", "start"]
 
 EXPOSE 9000
