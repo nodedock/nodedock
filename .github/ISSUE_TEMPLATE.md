@@ -1,6 +1,6 @@
 ### Info:
 - Docker version (`$ docker --version`):
-- Laradock commit (`$ git rev-parse HEAD`):
+- Nodedock commit (`$ git rev-parse HEAD`):
 - System info (Mac, PC, Linux):
 - System info disto/version:
 

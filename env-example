@@ -1,0 +1,74 @@
+###########################################################
+###################### General Setup ######################
+###########################################################
+
+### Paths #################################################
+
+# Point to the path of your applications code on your host
+APP_CODE_PATH_HOST=../
+
+# Point to where the `APP_CODE_PATH_HOST` should be in the container. You may add flags to the path `:cached`, `:delegated`. When using Docker Sync add `:nocopy`
+APP_CODE_PATH_CONTAINER=/var/www:cached
+
+# Choose storage path on your machine. For all storage systems
+DATA_PATH_HOST=~/.nodedock/data
+
+### Drivers ################################################
+
+# All volumes driver
+VOLUMES_DRIVER=local
+
+# All Networks driver
+NETWORKS_DRIVER=bridge
+
+### Docker compose files ##################################
+
+# Select which docker-compose files to include. If using docker-sync append `:docker-compose.sync.yml` at the end
+COMPOSE_FILE=docker-compose.yml
+
+# Change the separator from : to ; on Windows
+COMPOSE_PATH_SEPARATOR=:
+
+# Define the prefix of container names. This is useful if you have multiple projects that use nodedock to have seperate containers per project.
+COMPOSE_PROJECT_NAME=nodedock
+
+### NodeJS Version ###########################################
+
+# Select a Node version of the Workspace and NodeJS containers
+# For a full list, visit https://hub.docker.com/_/node/
+NODE_VERSION=10.7.0
+
+### Docker Host IP ########################################
+
+# Enter your Docker Host IP (will be appended to /etc/hosts). Default is `10.0.75.1`
+DOCKER_HOST_IP=10.0.75.1
+
+### Docker Sync ###########################################
+
+# If you are using Docker Sync. For `osx` use 'native_osx', for `windows` use 'unison', for `linux` docker-sync is not required
+DOCKER_SYNC_STRATEGY=native_osx
+
+###########################################################
+################ Containers Customization #################
+###########################################################
+
+### WORKSPACE #############################################
+
+WORKSPACE_INSTALL_NODE=true
+WORKSPACE_NODE_VERSION=node
+WORKSPACE_NPM_REGISTRY=
+WORKSPACE_INSTALL_YARN=true
+WORKSPACE_YARN_VERSION=latest
+WORKSPACE_INSTALL_NPM_GULP=true
+WORKSPACE_INSTALL_NPM_BOWER=true
+WORKSPACE_INSTALL_NPM_VUE_CLI=true
+WORKSPACE_INSTALL_WORKSPACE_SSH=false
+WORKSPACE_INSTALL_PYTHON=false
+WORKSPACE_INSTALL_IMAGE_OPTIMIZERS=false
+WORKSPACE_INSTALL_IMAGEMAGICK=false
+WORKSPACE_INSTALL_PG_CLIENT=false
+WORKSPACE_INSTALL_LIBPNG=false
+WORKSPACE_PUID=1000
+WORKSPACE_PGID=1000
+WORKSPACE_TIMEZONE=UTC
+WORKSPACE_SSH_PORT=2222
