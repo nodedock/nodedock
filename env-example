@@ -116,3 +116,15 @@ PMA_USER=default
 PMA_PASSWORD=secret
 PMA_ROOT_PASSWORD=secret
 PMA_PORT=8080
+
+### REDIS #################################################
+
+REDIS_PORT=6379
+
+### PHPREDISADMIN #########################################
+
+REDIS_WEBUI_USERNAME=nodedock
+REDIS_WEBUI_PASSWORD=nodedock
+REDIS_WEBUI_CONNECT_HOST=redis
+REDIS_WEBUI_CONNECT_PORT=6379
+REDIS_WEBUI_PORT=9987
