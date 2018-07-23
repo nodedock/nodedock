@@ -1,4 +1,4 @@
-# Nodedock IO
+# Nodedock
 
 Docker NodeJS development environment.
 
