@@ -534,7 +534,7 @@ docker-compose exec elasticsearch /usr/share/elasticsearch/bin/plugin install {p
 docker-compose restart elasticsearch
 ```
 
-## Miscellaneous
+# Miscellaneous
 
 ## Change the timezone
 
@@ -664,6 +664,7 @@ server_name node.test;
 ```
 
 ## Common Terminal Aliases
+
 When you start your docker container, Nodedock will copy the `aliases.sh` file located in the `nodedock/workspace` directory and add sourcing to the container `~/.bashrc` file.
 
 You are free to modify the `aliases.sh` as you see fit, adding your own aliases (or function macros) to suit your requirements.
@@ -821,7 +822,7 @@ docker-compose up ...
 
 *Note: If you faced any errors, try restarting Docker, and make sure you have no spaces in the `d4m-nfs-mounts.txt` file, and your `/etc/exports` file is clear.*
 
-## Common Problems
+# Common Problems
 
 *Here's a list of the common problems you might face, and the possible solutions.*
 
