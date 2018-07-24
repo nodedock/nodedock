@@ -223,6 +223,8 @@ RUN . ~/.bashrc
 
 ARG NPM_START_SCRIPT=start
 
-CMD ["npm", ${NPM_START_SCRIPT}]
+ENV NPM_START_SCRIPT ${NPM_START_SCRIPT}
+
+CMD ["sh", "-c", "npm run ${NPM_START_SCRIPT}"]
 
 EXPOSE 9000
