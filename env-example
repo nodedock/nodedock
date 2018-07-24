@@ -84,6 +84,8 @@ NODE_INSTALL_IMAGEMAGICK=true
 NODE_INSTALL_IMAGE_OPTIMIZERS=true
 NODE_INSTALL_GHOSTSCRIPT=false
 NODE_PG_CLIENT=false
+NODE_INSTALL_YARN=true
+NODE_YARN_VERSION=latest
 
 ### NGINX #################################################
 

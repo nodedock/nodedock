@@ -65,6 +65,8 @@ services:
         context: ./node
         args:
           - NODE_VERSION=${NODE_VERSION}
+          - YARN_VERSION=${NODE_YARN_VERSION}
+          - INSTALL_YARN=${NODE_INSTALL_YARN}
           - INSTALL_PG_CLIENT=${NODE_PG_CLIENT}
           - INSTALL_INTL=${NODE_INSTALL_INTL}
           - INSTALL_GHOSTSCRIPT=${NODE_INSTALL_GHOSTSCRIPT}
