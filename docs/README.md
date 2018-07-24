@@ -257,7 +257,683 @@ DB_HOST=mysql
 
 5 - Open your browser and visit your localhost address `http://localhost/`. If you followed the multiple projects setup, you can visit `http://project-1.test/` and `http://project-2.test/`.
 
-<br />
+# Documentation
+
+## List current running Containers
+
+```
+docker ps
+```
+
+You can also use the following command if you want to see only this project containers:
+
+```
+docker-compose ps
+```
+
+## Close all running Containers
+
+```
+docker-compose stop
+```
+
+To stop single container do:
+
+```
+docker-compose stop {container-name}
+```
+
+## Delete all existing Containers
+
+```
+docker-compose down
+```
+
+## Enter a Container (run commands in a running Container)
+
+1 - First list the current running containers with `docker ps`
+
+2 - Enter any container using:
+
+```
+docker-compose exec {container-name} bash
+```
+
+*Example: enter MySQL container*
+
+```
+docker-compose exec mysql bash
+```
+
+*Example: enter to MySQL prompt within MySQL container*
+
+```
+docker-compose exec mysql mysql -u homestead -psecret
+```
+
+3 - To exit a container, type `exit`.
+
+## Edit default container configuration
+
+Open the `docker-compose.yml` and change anything you want.
+
+Examples:
+
+Change MySQL Database Name:
+
+```
+    environment:
+        MYSQL_DATABASE: laradock
+    ...
+```
+
+Change Redis default port to 1111:
+
+```
+    ports:
+        - "1111:6379"
+    ...
+```
+
+## Edit a Docker Image
+
+1 - Find the `Dockerfile` of the image you want to edit,
+
+example for `mysql` it will be `mysql/Dockerfile`.
+
+2 - Edit the file the way you want.
+
+3 - Re-build the container:
+
+```
+docker-compose build mysql
+```
+
+More info on Containers rebuilding [here](#Build-Re-build-Containers).
+
+## Build/Re-build Containers
+
+If you do any change to any `Dockerfile` make sure you run this command, for the changes to take effect:
+
+```
+docker-compose build
+```
+Optionally you can specify which container to rebuild (instead of rebuilding all the containers):
+
+```
+docker-compose build {container-name}
+```
+
+You might use the `--no-cache` option if you want full rebuilding (`docker-compose build --no-cache {container-name}`).
+
+## Add more Software (Docker Images)
+
+To add an image (software), just edit the `docker-compose.yml` and add your container details, to do so you need to be familiar with the [docker compose file syntax](https://docs.docker.com/compose/compose-file/).
+
+## View the Log files
+
+The NGINX Log file is stored in the `logs/nginx` directory.
+
+However to view the logs of all the other containers (MySQL, PHP-FPM,...) you can run this:
+
+```
+docker-compose logs {container-name}
+```
+
+```
+docker-compose logs -f {container-name}
+```
+
+More [options](https://docs.docker.com/compose/reference/logs/)
+
+## Prepare Nodedock for Production
+
+It's recommended for production to create a custom `docker-compose.yml` file. For that reason, Nodedock is shipped with `production-docker-compose.yml` which should contain only the containers you are planning to run on production (usage example: `docker-compose -f production-docker-compose.yml up -d nginx mysql redis ...`).
+
+Note: The Database (MySQL/MariaDB/...) ports should not be forwarded on production, because Docker will automatically publish the port on the host, which is quite insecure, unless specifically told not to. So make sure to remove these lines:
+
+```
+ports:
+    - "3306:3306"
+```
+
+To learn more about how Docker publishes ports, please read [this excellent post on the subject](https://fralef.me/docker-and-iptables.html).
+
+## Use Redis
+
+1 - First make sure you run the Redis Container (`redis`) with the `docker-compose up` command.
+
+```
+docker-compose up -d redis
+```
+
+> To execute redis commands, enter the redis container first `docker-compose exec redis bash` then enter the `redis-cli`.
+
+2 - Open your Laravel's `.env` file and set the `REDIS_HOST` to `redis`
+
+```
+REDIS_HOST=redis
+```
+
+If you're using Laravel, and you don't find the `REDIS_HOST` variable in your `.env` file. Go to the database configuration file `config/database.php` and replace the default `127.0.0.1` IP with `redis` for Redis like this:
+
+```
+'redis' => [
+    'cluster' => false,
+    'default' => [
+        'host'     => 'redis',
+        'port'     => 6379,
+        'database' => 0,
+    ],
+],
+```
+
+3 - To enable Redis Caching and/or for Sessions Management. Also from the `.env` file set `CACHE_DRIVER` and `SESSION_DRIVER` to `redis` instead of the default `file`.
+
+```
+CACHE_DRIVER=redis
+SESSION_DRIVER=redis
+```
+
+## Use Mongo
+
+1 - First install `mongo` in the Workspace and the PHP-FPM Containers:
+<br>
+a) open the `.env` file
+<br>
+b) search for the `WORKSPACE_INSTALL_MONGO` argument under the Workspace Container
+<br>
+c) set it to `true`
+<br>
+d) search for the `PHP_FPM_INSTALL_MONGO` argument under the PHP-FPM Container
+<br>
+e) set it to `true`
+
+2 - Re-build the containers `docker-compose build workspace php-fpm`
+
+3 - Run the MongoDB Container (`mongo`) with the `docker-compose up` command.
+
+```
+docker-compose up -d mongo
+```
+
+4 - Open your project's `.env` file or whatever you use for configuration and update the following variables:
+
+- set the `DB_HOST` to your `mongo`.
+- set the `DB_PORT` to `27017`.
+- set the `DB_DATABASE` to `database`.
+
+## Use PhpMyAdmin
+
+1 - Run the phpMyAdmin Container (`phpmyadmin`) with the `docker-compose up` command. Example:
+
+```
+# use with mysql
+docker-compose up -d mysql phpmyadmin
+```
+
+*Note: To use with MariaDB, open `.env` and set `PMA_DB_ENGINE=mysql`*
+
+2 - Open your browser and visit the localhost on port **8080**:  `http://localhost:8080`
+
+## Use Adminer
+
+1 - Run the Adminer Container (`adminer`) with the `docker-compose up` command. Example:
+
+```
+docker-compose up -d adminer
+```
+
+2 - Open your browser and visit the localhost on port **8080**:  `http://localhost:8080`
+
+**Note:** We've locked Adminer to version 4.3.0 as at the time of writing [it contained a major bug](https://sourceforge.net/p/adminer/bugs-and-features/548/) preventing PostgreSQL users from logging in. If that bug is fixed (or if you're not using PostgreSQL) feel free to set Adminer to the latest version within [the Dockerfile](https://github.com/laradock/laradock/blob/master/adminer/Dockerfile#L1): `FROM adminer:latest`
+
+## Use PgAdmin
+
+1 - Run the pgAdmin Container (`pgadmin`) with the `docker-compose up` command. Example:
+
+```
+docker-compose up -d postgres pgadmin
+```
+
+2 - Open your browser and visit the localhost on port **5050**:  `http://localhost:5050`
+
+## Use Beanstalkd
+
+1 - Run the Beanstalkd Container:
+
+```
+docker-compose up -d beanstalkd
+```
+
+2 - Configure Laravel to connect to that container by editing the `config/queue.php` config file.
+
+a. first set `beanstalkd` as default queue driver
+b. set the queue host to beanstalkd : `QUEUE_HOST=beanstalkd`
+
+*beanstalkd is now available on default port `11300`.*
+
+Optionally you can use the Beanstalkd Console Container to manage your Queues from a web interface.
+
+1 - Run the Beanstalkd Console Container:
+
+```
+docker-compose up -d beanstalkd-console
+```
+
+2 - Open your browser and visit `http://localhost:2080/`
+
+_Note: You can customize the port on which beanstalkd console is listening by changing `BEANSTALKD_CONSOLE_HOST_PORT` in `.env`. The default value is *2080*._
+
+3 - Add the server
+
+- Host: beanstalkd
+- Port: 11300
+
+4 - Done.
+
+## Use ElasticSearch
+
+1 - Run the ElasticSearch Container (`elasticsearch`) with the `docker-compose up` command:
+
+```bash
+docker-compose up -d elasticsearch
+```
+
+2 - Open your browser and visit the localhost on port **9200**:  `http://localhost:9200`
+
+> The default username is `elastic` and the default password is `changeme`.
+
+### Install ElasticSearch Plugin
+
+1 - Install an ElasticSearch plugin.
+
+```bash
+docker-compose exec elasticsearch /usr/share/elasticsearch/bin/plugin install {plugin-name}
+```
+
+2 - Restart elasticsearch container
+
+```bash
+docker-compose restart elasticsearch
+```
+
+## Miscellaneous
+
+## Change the timezone
+
+To change the timezone for the `workspace` container, modify the `TZ` build argument in the Docker Compose file to one in the [TZ database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+
+For example, if I want the timezone to be `New York`:
+
+```
+    workspace:
+        build:
+            context: ./workspace
+            args:
+                - TZ=America/New_York
+    ...
+```
+
+We also recommend [setting the timezone in Laravel](http://www.camroncade.com/managing-timezones-with-laravel/).
+
+## Adding cron jobs
+
+You can add your cron jobs to `workspace/crontab/root` after the `php artisan` line.
+
+```
+* * * * * php /var/www/artisan schedule:run >> /dev/null 2>&1
+
+# Custom cron
+* * * * * root echo "Every Minute" > /var/log/cron.log 2>&1
+```
+
+Make sure you [change the timezone](#Change-the-timezone) if you don't want to use the default (UTC).
+
+If you are on Windows, verify that the line endings for this file are LF only, otherwise the cron jobs will silently fail.
+
+## Access workspace via ssh
+
+You can access the `workspace` container through `localhost:2222` by setting the `INSTALL_WORKSPACE_SSH` build argument to `true`.
+
+To change the default forwarded port for ssh:
+
+```
+    workspace:
+		ports:
+			- "2222:22" # Edit this line
+    ...
+```
+
+Then login using:
+
+```
+ssh -o PasswordAuthentication=no    \
+    -o StrictHostKeyChecking=no     \
+    -o UserKnownHostsFile=/dev/null \
+    -p 2222                         \
+    -i workspace/insecure_id_rsa    \
+    laradock@localhost
+```
+
+To login as root, replace laradock@locahost with root@localhost.
+
+## Change the (MySQL) Version
+
+By default **MySQL 8.0** is running.
+
+MySQL 8.0 is a development release.  You may prefer to use the latest stable version, or an even older release.  If you wish, you can change the MySQL image that is used.
+
+Open up your .env file and set the `MYSQL_VERSION` variable to the version you would like to install.
+
+```
+MYSQL_VERSION=5.7
+```
+
+Available versions are: 5.5, 5.6, 5.7, 8.0, or latest.  See https://store.docker.com/images/mysql for more information.
+
+## MySQL access from host
+
+You can forward the MySQL/MariaDB port to your host by making sure these lines are added to the `mysql` or `mariadb` section of the `docker-compose.yml` or in your [environment specific Compose](https://docs.docker.com/compose/extends/) file.
+
+```
+ports:
+    - "3306:3306"
+```
+
+## MySQL root access
+
+The default username and password for the root MySQL user are `root` and `root `.
+
+1 - Enter the MySQL container: `docker-compose exec mysql bash`.
+
+2 - Enter mysql: `mysql -uroot -proot` for non root access use `mysql -uhomestead -psecret`.
+
+3 - See all users: `SELECT User FROM mysql.user;`
+
+4 - Run any commands `show databases`, `show tables`, `select * from.....`.
+
+## Create Multiple Databases (MySQL)
+
+Create `createdb.sql` from `mysql/docker-entrypoint-initdb.d/createdb.sql.example` in `mysql/docker-entrypoint-initdb.d/*` and add your SQL syntax as follow:
+
+```sql
+CREATE DATABASE IF NOT EXISTS `your_db_1` COLLATE 'utf8_general_ci' ;
+GRANT ALL ON `your_db_1`.* TO 'mysql_user'@'%' ;
+```
+
+## Change MySQL port
+
+Modify the `mysql/my.cnf` file to set your port number, `1234` is used as an example.
+
+```
+[mysqld]
+port=1234
+```
+
+If you need <a href="#MySQL-access-from-host">MySQL access from your host</a>, do not forget to change the internal port number (`"3306:3306"` -> `"3306:1234"`) in the docker-compose configuration file.
+
+## Use custom Domain (instead of the Docker IP)
+
+Assuming your custom domain is `laravel.test`
+
+1 - Open your `/etc/hosts` file and map your localhost address `127.0.0.1` to the `node.test` domain, by adding the following:
+
+```bash
+127.0.0.1    node.test
+```
+
+2 - Open your browser and visit `{http://node.test}`
+
+
+Optionally you can define the server name in the NGINX configuration file, like this:
+
+```
+server_name laravel.test;
+```
+
+## Common Terminal Aliases
+When you start your docker container, Laradock will copy the `aliases.sh` file located in the `laradock/workspace` directory and add sourcing to the container `~/.bashrc` file.
+
+You are free to modify the `aliases.sh` as you see fit, adding your own aliases (or function macros) to suit your requirements.
+
+## Keep track of your Nodedock changes
+
+1. Fork the Nodedock repository.
+2. Use that fork as a submodule.
+3. Commit all your changes to your fork.
+4. Pull new stuff from the main repository from time to time.
+
+## Upgrading Laradock
+
+Moving from Docker Toolbox (VirtualBox) to Docker Native (for Mac/Windows). Requires upgrading Laradock from v3.* to v4.*:
+
+1. Stop the docker VM `docker-machine stop {default}`
+2. Install Docker for [Mac](https://docs.docker.com/docker-for-mac/) or [Windows](https://docs.docker.com/docker-for-windows/).
+3. Upgrade Laradock to `v4.*.*` (`git pull origin master`)
+4. Use Laradock as you used to do: `docker-compose up -d nginx mysql`.
+
+**Note:** If you face any problem with the last step above: rebuild all your containers
+`docker-compose build --no-cache`
+"Warning Containers Data might be lost!"
+
+## Improve speed on MacOS
+
+Docker on the Mac [is slow](https://github.com/docker/for-mac/issues/77), at the time of writing. Especially for larger projects, this can be a problem. The problem is [older than March 2016](https://forums.docker.com/t/file-access-in-mounted-volumes-extremely-slow-cpu-bound/8076) - as it's a such a long-running issue, we're including it in the docs here.
+
+So since sharing code into Docker containers with osxfs have very poor performance compared to Linux. Likely there are some workarounds:
+
+### Workaround A: using dinghy
+
+[Dinghy](https://github.com/codekitchen/dinghy) creates its own VM using docker-machine, it will not modify your existing docker-machine VMs.
+
+Quick Setup giude, (we recommend you check their docs)
+
+1) `brew tap codekitchen/dinghy`
+
+2) `brew install dinghy`
+
+3) `dinghy create --provider virtualbox` (must have virtualbox installed, but they support other providers if you prefer)
+
+4) after the above command is done it will display some env variables, copy them to the bash profile or zsh or.. (this will instruct docker to use the server running inside the VM)
+
+5) `docker-compose up ...`
+
+### Workaround B: using d4m-nfs
+
+You can use the d4m-nfs solution in 2 ways, the first is by using the built-in Laradock integration, and the second is using the tool separately. Below is show case of both methods:
+
+### B.1: using the built in d4m-nfs integration
+
+In simple terms, docker-sync creates a docker container with a copy of all the application files that can be accessed very quickly from the other containers.
+On the other hand, docker-sync runs a process on the host machine that continuously tracks and updates files changes from the host to this intermediate container.
+
+Out of the box, it comes pre-configured for OS X, but using it on Windows is very easy to set-up by modifying the `DOCKER_SYNC_STRATEGY` on the `.env`
+
+#### Usage
+
+Laradock comes with `sync.sh`, an optional bash script, that automates installing, running and stopping docker-sync.  Note that to run the bash script you may need to change the permissions `chmod 755 sync.sh`
+
+1) Configure your Laradock environment as you would normally do and test your application to make sure that your sites are running correctly.
+
+2) Make sure to set `DOCKER_SYNC_STRATEGY` on the `.env`. Read the [syncing strategies](https://github.com/EugenMayer/docker-sync/wiki/8.-Strategies) for details.
+```
+# osx: 'native_osx' (default)
+# windows: 'unison'
+# linux: docker-sync not required
+
+DOCKER_SYNC_STRATEGY=native_osx
+```
+
+3) set `APP_CODE_PATH_CONTAINER=/var/www` to `APP_CODE_PATH_CONTAINER=/var/www:nocopy` in the .env file
+
+4) Install the docker-sync gem on the host-machine:
+```bash
+./sync.sh install
+```
+5) Start docker-sync and the Laradock environment.
+Specify the services you want to run, as you would normally do with `docker-compose up`
+```bash
+./sync.sh up nginx mysql
+```
+Please note that the first time docker-sync runs, it will copy all the files to the intermediate container and that may take a very long time (15min+).
+6) To stop the environment and docker-sync do:
+```bash
+./sync.sh down
+```
+
+#### Setting up Aliases (optional)
+
+You may create bash profile aliases to avoid having to remember and type these commands for everyday development.
+Add the following lines to your `~/.bash_profile`:
+
+```bash
+alias devup="cd /PATH_TO_LARADOCK/laradock; ./sync.sh up nginx mysql" #add your services
+alias devbash="cd /PATH_TO_LARADOCK/laradock; ./sync.sh bash"
+alias devdown="cd /PATH_TO_LARADOCK/laradock; ./sync.sh down"
+```
+
+Now from any location on your machine, you can simply run `devup`, `devbash` and `devdown`.
+
+#### Additional Commands
+
+Opening bash on the workspace container (to run artisan for example):
+
+```
+./sync.sh bash
+```
+
+Manually triggering the synchronization of the files:
+
+```
+./sync.sh sync
+```
+
+Removing and cleaning up the files and the docker-sync container. Use only if you want to rebuild or remove docker-sync completely. The files on the host will be kept untouched.
+
+```
+./sync.sh clean
+```
+
+
+#### Additional Notes
+
+- You may run laradock with or without docker-sync at any time using with the same `.env` and `docker-compose.yml`, because the configuration is overridden automatically when docker-sync is used.
+- You may inspect the `sync.sh` script to learn each of the commands and even add custom ones.
+- If a container cannot access the files on docker-sync, you may need to set a user on the Dockerfile of that container with an id of 1000 (this is the UID that nginx and php-fpm have configured on laradock). Alternatively, you may change the permissions to 777, but this is **not** recommended.
+
+Visit the [docker-sync documentation](https://github.com/EugenMayer/docker-sync/wiki) for more details.
+
+### B.2: using the d4m-nfs tool
+
+[D4m-nfs](https://github.com/IFSight/d4m-nfs) automatically mount NFS volume instead of osxfs one.
+
+1) Update the Docker [File Sharing] preferences:
+
+Click on the Docker Icon > Preferences > (remove everything form the list except `/tmp`).
+
+2) Restart Docker.
+
+3) Clone the [d4m-nfs](https://github.com/IFSight/d4m-nfs) repository to your `home` directory.
+
+```bash
+git clone https://github.com/IFSight/d4m-nfs ~/d4m-nfs
+```
+
+4) Create (or edit) the file `~/d4m-nfs/etc/d4m-nfs-mounts.txt`, and write the following configuration in it:
+
+```txt
+/Users:/Users
+```
+
+5) Create (or edit) the file `/etc/exports`, make sure it exists and is empty. (There may be collisions if you come from Vagrant or if you already executed the `d4m-nfs.sh` script before).
+
+
+6) Run the `d4m-nfs.sh` script (might need Sudo):
+
+```bash
+~/d4m-nfs/d4m-nfs.sh
+```
+
+That's it! Run your containers.. Example:
+
+```bash
+docker-compose up ...
+```
+
+*Note: If you faced any errors, try restarting Docker, and make sure you have no spaces in the `d4m-nfs-mounts.txt` file, and your `/etc/exports` file is clear.*
+
+## Common Problems
+
+*Here's a list of the common problems you might face, and the possible solutions.*
+
+## I see "Welcome to nginx" instead of the Node App!
+
+Use `http://127.0.0.1` instead of `http://localhost` in your browser.
+
+## I see an error message containing `address already in use` or `port is already allocated`
+
+Make sure the ports for the services that you are trying to run (22, 80, 443, 3306, etc.) are not being used already by other programs on the host, such as a built in `nginx`/`apache`/`httpd` service or other development tools you have installed.
+
+## I get NGINX error 404 Not Found on Windows.
+
+1. Go to docker Settings on your Windows machine.
+2. Click on the `Shared Drives` tab and check the drive that contains your project files.
+3. Enter your windows username and password.
+4. Go to the `reset` tab and click restart docker.
+
+## The time in my services does not match the current time
+
+1. Make sure you've [changed the timezone](#Change-the-timezone).
+2. Stop and rebuild the containers (`docker-compose up -d --build <services>`)
+
+## I get MySQL connection refused
+
+This error sometimes happens because your Laravel application isn't running on the container localhost IP (Which is 127.0.0.1). Steps to fix it:
+
+* Option A
+  1. Check your running Laravel application IP by dumping `Request::ip()` variable using `dd(Request::ip())` anywhere on your application. The result is the IP of your Laravel container.
+  2. Change the `DB_HOST` variable on env with the IP that you received from previous step.
+* Option B
+   1. Change the `DB_HOST` value to the same name as the MySQL docker container. The Laradock docker-compose file currently has this as `mysql`
+
+## I get stuck when building nginx on `fetch http://mirrors.aliyun.com/alpine/v3.5/main/x86_64/APKINDEX.tar.gz`
+
+As stated on [#749](https://github.com/laradock/laradock/issues/749#issuecomment-293296687), removing the line `RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/' /etc/apk/repositories` from `nginx/Dockerfile` solves the problem.
+
+## Custom composer repo packagist url and npm registry url
+
+In China, the origin source of composer and npm is very slow. You can add `WORKSPACE_NPM_REGISTRY` and `WORKSPACE_COMPOSER_REPO_PACKAGIST` config in `.env` to use your custom source.
+
+Example:
+```bash
+WORKSPACE_NPM_REGISTRY=https://registry.npm.taobao.org
+WORKSPACE_COMPOSER_REPO_PACKAGIST=https://packagist.phpcomposer.com
+```
+
+## I get `Module build failed: Error: write EPIPE` while compiling react application
+
+When you run `npm build` or `yarn dev` building a react application using webpack with elixir you may receive a `Error: write EPIPE` while processing .jpg images.
+
+This is caused of an outdated library for processing **.jpg files** in ubuntu 16.04.
+
+To fix the problem you can follow those steps
+
+1 - Open the `.env`.
+
+2 - Search for `WORKSPACE_INSTALL_LIBPNG` or add the key if missing.
+
+3 - Set the value to true:
+
+```dotenv
+WORKSPACE_INSTALL_LIBPNG=true
+```
+
+4 - Finally rebuild the workspace image
+
+```bash
+docker-compose build workspace
+```
 
 # License
 
