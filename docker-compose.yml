@@ -34,6 +34,7 @@ services:
         context: ./workspace
         args:
           - NODE_VERSION=${NODE_VERSION}
+          - NODE_ENV=${NODE_ENV}
           - YARN_VERSION=${WORKSPACE_YARN_VERSION}
           - INSTALL_NODE=${WORKSPACE_INSTALL_NODE}
           - NPM_REGISTRY=${WORKSPACE_NPM_REGISTRY}

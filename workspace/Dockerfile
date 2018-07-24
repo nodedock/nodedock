@@ -142,6 +142,8 @@ USER nodedock
 # Check if NVM needs to be installed
 ARG NODE_VERSION=node
 ENV NODE_VERSION ${NODE_VERSION}
+ARG NODE_ENV=development
+ENV NODE_ENV ${NODE_ENV}
 ARG INSTALL_NODE=false
 ARG INSTALL_NPM_GULP=false
 ARG INSTALL_NPM_BOWER=false

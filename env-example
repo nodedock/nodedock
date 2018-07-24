@@ -36,11 +36,14 @@ COMPOSE_PATH_SEPARATOR=:
 # Define the prefix of container names. This is useful if you have multiple projects that use nodedock to have seperate containers per project.
 COMPOSE_PROJECT_NAME=nodedock
 
-### NodeJS Version ###########################################
+### NodeJS Version and Environment#########################
 
 # Select a Node version of the Workspace and NodeJS containers
 # For a full list, visit https://hub.docker.com/_/node/
 NODE_VERSION=10.7.0
+
+# This will be propagated to both node and workspace containers
+NODE_ENV=development
 
 ### Docker Host IP ########################################
 
