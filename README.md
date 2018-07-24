@@ -3,7 +3,7 @@
 Docker NodeJS development environment.
 
 <p align="center">
-![Node + Docker](https://raw.githubusercontent.com/nodedock/nodedock/master/docs/node-docker.png)
+<img alt="Node + Docker" src="https://raw.githubusercontent.com/nodedock/nodedock/master/docs/node-docker.png" />
 </p>
 
 ## Goal
