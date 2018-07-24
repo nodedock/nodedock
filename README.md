@@ -27,6 +27,16 @@ You can also declare the list of services you'd like to run using `NODEDOCK_SERV
 
 After that, you'll be able to use `start.sh`, `stop.sh`, `restart.sh` and `logs.sh` scripts which are located in the root directory of nodedock.
 
+## Working with Documentation
+
+You'll need [Docsify](https://docsify.js.org/):
+
+```
+yarn global add docsify-cli
+```
+
+After that, you can view docs by running `docsify serve ./docs` and visiting `http://localhost:3000`
+
 ## Based on Laradock
 
 This project is based on awesome [Laradock](https://github.com/laradock/laradock) ([contributors](https://github.com/laradock/laradock/graphs/contributors))
