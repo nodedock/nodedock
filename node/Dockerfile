@@ -219,6 +219,8 @@ WORKDIR /var/www
 # Source the bash before running npm start
 RUN . ~/.bashrc
 
-CMD ["npm", "start"]
+ARG NPM_START_SCRIPT=start
+
+CMD ["npm", ${NPM_START_SCRIPT}]
 
 EXPOSE 9000

@@ -87,6 +87,7 @@ NODE_INSTALL_GHOSTSCRIPT=false
 NODE_PG_CLIENT=false
 NODE_INSTALL_YARN=true
 NODE_YARN_VERSION=latest
+NODE_NPM_START_SCRIPT=start
 
 ### NGINX #################################################
 
