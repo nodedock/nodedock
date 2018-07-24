@@ -10,7 +10,7 @@ Nodedock is a community-driven project to create the best Docker Node developmen
 
 I'm an ex-PHP developer, and I've used to use Laradock and similar solutions a lot. However, there's no close thing in NodeJS ecosystem (or at least I didn't find it). So, I decided to build a solution based on Laradock, but for NodeJS. This is how Nodedock was born.
 
-## Usage Example
+## Quick Start
 
 You need to have a node project with `package.json` with `start` script definition as `node` container will run `npm start` command after start up.
 
@@ -25,11 +25,15 @@ docker-compose logs -f
 
 The last one is optional.
 
-## Alternative Usage Example
+## Alternative Commands
 
 You can also declare the list of services you'd like to run using `NODEDOCK_SERVICES` variable in `.env` (you can create your own `.env` by copying `env-example` file).
 
 After that, you'll be able to use `start.sh`, `stop.sh`, `restart.sh` and `logs.sh` scripts which are located in the root directory of nodedock.
+
+## Documentation
+
+Available on project's website [nodedock.io](https://nodedock.io)
 
 ## Working with Documentation
 
