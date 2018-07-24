@@ -1,6 +1,6 @@
 # Nodedock <a href="https://travis-ci.org/nodedock/nodedock"><img src="https://travis-ci.org/nodedock/nodedock.svg?branch=master" alt="Build status"></a>
 
-Docker NodeJS development environment.
+Nodedock is a community-driven project to create the best Docker Node development environment.
 
 <p align="center">
 <img alt="Node + Docker" src="https://raw.githubusercontent.com/nodedock/nodedock/master/docs/node-docker.png" />
