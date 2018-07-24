@@ -6,7 +6,9 @@
 
 A full NodeJS development environment for Docker.
 
+<p align="center">
 ![Node + Docker](https://raw.githubusercontent.com/nodedock/nodedock/master/docs/node-docker.png)
+</p>
 
 Includes pre-packaged Docker Images, all pre-configured to provide a wonderful Node development environment.
 
