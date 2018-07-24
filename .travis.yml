@@ -11,10 +11,9 @@ env:
     - NODE_VERSION=8.11.3 BUILD_SERVICE=node
     - NODE_VERSION=10.7.0 BUILD_SERVICE=node
 
-    - PHP_VERSION=NA BUILD_SERVICE=solr
-    - PHP_VERSION=NA BUILD_SERVICE="nginx mysql postgres postgres-postgis redis"
-    - PHP_VERSION=NA BUILD_SERVICE="adminer phpmyadmin"
-    - PHP_VERSION=NA BUILD_SERVICE="memcached beanstalkd beanstalkd-console rabbitmq elasticsearch mailhog maildev"
+    - NODE_VERSION=NA BUILD_SERVICE="nginx mysql postgres postgres-postgis redis"
+    - NODE_VERSION=NA BUILD_SERVICE="adminer phpmyadmin"
+    - NODE_VERSION=NA BUILD_SERVICE="memcached beanstalkd beanstalkd-console rabbitmq elasticsearch mailhog maildev"
 
 # Installing a newer Docker version
 before_install:
