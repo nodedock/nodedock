@@ -221,7 +221,7 @@ In this example we'll see how to run NGINX (web server) and MySQL (database engi
 docker-compose up -d nginx mysql
 ```
 
-**Note**: All the web server containers `nginx`, `apache` ..etc depends on `php-fpm`, which means if you run any of them, they will automatically launch the `php-fpm` container for you, so no need to explicitly specify it in the `up` command. If you have to do so, you may need to run them as follows: `docker-compose up -d nginx php-fpm mysql`.
+**Note**: All the web server containers `nginx` ..etc depends on `node`, which means if you run any of them, they will automatically launch the `node` container for you, so no need to explicitly specify it in the `up` command. If you have to do so, you may need to run them as follows: `docker-compose up -d nginx node mysql`.
 
 You can select your own combination of containers from [this list](http://nodedock.io/introduction/#supported-software-images).
 
@@ -323,7 +323,7 @@ Change MySQL Database Name:
 
 ```
     environment:
-        MYSQL_DATABASE: laradock
+        MYSQL_DATABASE: nodedock
     ...
 ```
 
@@ -374,7 +374,7 @@ To add an image (software), just edit the `docker-compose.yml` and add your cont
 
 The NGINX Log file is stored in the `logs/nginx` directory.
 
-However to view the logs of all the other containers (MySQL, PHP-FPM,...) you can run this:
+However to view the logs of all the other containers (MySQL, Node,...) you can run this:
 
 ```
 docker-compose logs {container-name}
@@ -409,35 +409,11 @@ docker-compose up -d redis
 
 > To execute redis commands, enter the redis container first `docker-compose exec redis bash` then enter the `redis-cli`.
 
-2 - Open your Laravel's `.env` file and set the `REDIS_HOST` to `redis`
-
-```
-REDIS_HOST=redis
-```
-
-If you're using Laravel, and you don't find the `REDIS_HOST` variable in your `.env` file. Go to the database configuration file `config/database.php` and replace the default `127.0.0.1` IP with `redis` for Redis like this:
-
-```
-'redis' => [
-    'cluster' => false,
-    'default' => [
-        'host'     => 'redis',
-        'port'     => 6379,
-        'database' => 0,
-    ],
-],
-```
-
-3 - To enable Redis Caching and/or for Sessions Management. Also from the `.env` file set `CACHE_DRIVER` and `SESSION_DRIVER` to `redis` instead of the default `file`.
-
-```
-CACHE_DRIVER=redis
-SESSION_DRIVER=redis
-```
+2 - In your app, set redis host to `redis`
 
 ## Use Mongo
 
-1 - First install `mongo` in the Workspace and the PHP-FPM Containers:
+1 - First install `mongo` in the Workspace and the Node Containers:
 <br>
 a) open the `.env` file
 <br>
@@ -445,11 +421,11 @@ b) search for the `WORKSPACE_INSTALL_MONGO` argument under the Workspace Contain
 <br>
 c) set it to `true`
 <br>
-d) search for the `PHP_FPM_INSTALL_MONGO` argument under the PHP-FPM Container
+d) search for the `NODE_INSTALL_MONGO` argument under the Node Container
 <br>
 e) set it to `true`
 
-2 - Re-build the containers `docker-compose build workspace php-fpm`
+2 - Re-build the containers `docker-compose build workspace node`
 
 3 - Run the MongoDB Container (`mongo`) with the `docker-compose up` command.
 
@@ -486,7 +462,7 @@ docker-compose up -d adminer
 
 2 - Open your browser and visit the localhost on port **8080**:  `http://localhost:8080`
 
-**Note:** We've locked Adminer to version 4.3.0 as at the time of writing [it contained a major bug](https://sourceforge.net/p/adminer/bugs-and-features/548/) preventing PostgreSQL users from logging in. If that bug is fixed (or if you're not using PostgreSQL) feel free to set Adminer to the latest version within [the Dockerfile](https://github.com/laradock/laradock/blob/master/adminer/Dockerfile#L1): `FROM adminer:latest`
+**Note:** We've locked Adminer to version 4.3.0 as at the time of writing [it contained a major bug](https://sourceforge.net/p/adminer/bugs-and-features/548/) preventing PostgreSQL users from logging in. If that bug is fixed (or if you're not using PostgreSQL) feel free to set Adminer to the latest version within [the Dockerfile](https://github.com/nodedock/nodedock/blob/master/adminer/Dockerfile#L1): `FROM adminer:latest`
 
 ## Use PgAdmin
 
@@ -506,7 +482,7 @@ docker-compose up -d postgres pgadmin
 docker-compose up -d beanstalkd
 ```
 
-2 - Configure Laravel to connect to that container by editing the `config/queue.php` config file.
+2 - Configure your app to connect to that container.
 
 a. first set `beanstalkd` as default queue driver
 b. set the queue host to beanstalkd : `QUEUE_HOST=beanstalkd`
@@ -575,16 +551,11 @@ For example, if I want the timezone to be `New York`:
     ...
 ```
 
-We also recommend [setting the timezone in Laravel](http://www.camroncade.com/managing-timezones-with-laravel/).
-
 ## Adding cron jobs
 
-You can add your cron jobs to `workspace/crontab/root` after the `php artisan` line.
+You can add your cron jobs to `workspace/crontab/root`.
 
 ```
-* * * * * php /var/www/artisan schedule:run >> /dev/null 2>&1
-
-# Custom cron
 * * * * * root echo "Every Minute" > /var/log/cron.log 2>&1
 ```
 
@@ -613,10 +584,10 @@ ssh -o PasswordAuthentication=no    \
     -o UserKnownHostsFile=/dev/null \
     -p 2222                         \
     -i workspace/insecure_id_rsa    \
-    laradock@localhost
+    nodedock@localhost
 ```
 
-To login as root, replace laradock@locahost with root@localhost.
+To login as root, replace nodedock@locahost with root@localhost.
 
 ## Change the (MySQL) Version
 
@@ -675,7 +646,7 @@ If you need <a href="#MySQL-access-from-host">MySQL access from your host</a>, d
 
 ## Use custom Domain (instead of the Docker IP)
 
-Assuming your custom domain is `laravel.test`
+Assuming your custom domain is `node.test`
 
 1 - Open your `/etc/hosts` file and map your localhost address `127.0.0.1` to the `node.test` domain, by adding the following:
 
@@ -689,11 +660,11 @@ Assuming your custom domain is `laravel.test`
 Optionally you can define the server name in the NGINX configuration file, like this:
 
 ```
-server_name laravel.test;
+server_name node.test;
 ```
 
 ## Common Terminal Aliases
-When you start your docker container, Laradock will copy the `aliases.sh` file located in the `laradock/workspace` directory and add sourcing to the container `~/.bashrc` file.
+When you start your docker container, Nodedock will copy the `aliases.sh` file located in the `nodedock/workspace` directory and add sourcing to the container `~/.bashrc` file.
 
 You are free to modify the `aliases.sh` as you see fit, adding your own aliases (or function macros) to suit your requirements.
 
@@ -703,19 +674,6 @@ You are free to modify the `aliases.sh` as you see fit, adding your own aliases 
 2. Use that fork as a submodule.
 3. Commit all your changes to your fork.
 4. Pull new stuff from the main repository from time to time.
-
-## Upgrading Laradock
-
-Moving from Docker Toolbox (VirtualBox) to Docker Native (for Mac/Windows). Requires upgrading Laradock from v3.* to v4.*:
-
-1. Stop the docker VM `docker-machine stop {default}`
-2. Install Docker for [Mac](https://docs.docker.com/docker-for-mac/) or [Windows](https://docs.docker.com/docker-for-windows/).
-3. Upgrade Laradock to `v4.*.*` (`git pull origin master`)
-4. Use Laradock as you used to do: `docker-compose up -d nginx mysql`.
-
-**Note:** If you face any problem with the last step above: rebuild all your containers
-`docker-compose build --no-cache`
-"Warning Containers Data might be lost!"
 
 ## Improve speed on MacOS
 
@@ -741,7 +699,7 @@ Quick Setup giude, (we recommend you check their docs)
 
 ### Workaround B: using d4m-nfs
 
-You can use the d4m-nfs solution in 2 ways, the first is by using the built-in Laradock integration, and the second is using the tool separately. Below is show case of both methods:
+You can use the d4m-nfs solution in 2 ways, the first is by using the built-in Nodedock integration, and the second is using the tool separately. Below is show case of both methods:
 
 ### B.1: using the built in d4m-nfs integration
 
@@ -752,9 +710,9 @@ Out of the box, it comes pre-configured for OS X, but using it on Windows is ver
 
 #### Usage
 
-Laradock comes with `sync.sh`, an optional bash script, that automates installing, running and stopping docker-sync.  Note that to run the bash script you may need to change the permissions `chmod 755 sync.sh`
+Nodedock comes with `sync.sh`, an optional bash script, that automates installing, running and stopping docker-sync.  Note that to run the bash script you may need to change the permissions `chmod 755 sync.sh`
 
-1) Configure your Laradock environment as you would normally do and test your application to make sure that your sites are running correctly.
+1) Configure your Nodedock environment as you would normally do and test your application to make sure that your sites are running correctly.
 
 2) Make sure to set `DOCKER_SYNC_STRATEGY` on the `.env`. Read the [syncing strategies](https://github.com/EugenMayer/docker-sync/wiki/8.-Strategies) for details.
 ```
@@ -771,7 +729,7 @@ DOCKER_SYNC_STRATEGY=native_osx
 ```bash
 ./sync.sh install
 ```
-5) Start docker-sync and the Laradock environment.
+5) Start docker-sync and the Nodedock environment.
 Specify the services you want to run, as you would normally do with `docker-compose up`
 ```bash
 ./sync.sh up nginx mysql
@@ -788,9 +746,9 @@ You may create bash profile aliases to avoid having to remember and type these c
 Add the following lines to your `~/.bash_profile`:
 
 ```bash
-alias devup="cd /PATH_TO_LARADOCK/laradock; ./sync.sh up nginx mysql" #add your services
-alias devbash="cd /PATH_TO_LARADOCK/laradock; ./sync.sh bash"
-alias devdown="cd /PATH_TO_LARADOCK/laradock; ./sync.sh down"
+alias devup="cd /PATH_TO_NODEDOCK/nodedock; ./sync.sh up nginx mysql" #add your services
+alias devbash="cd /PATH_TO_NODEDOCK/nodedock; ./sync.sh bash"
+alias devdown="cd /PATH_TO_NODEDOCK/nodedock; ./sync.sh down"
 ```
 
 Now from any location on your machine, you can simply run `devup`, `devbash` and `devdown`.
@@ -818,9 +776,9 @@ Removing and cleaning up the files and the docker-sync container. Use only if yo
 
 #### Additional Notes
 
-- You may run laradock with or without docker-sync at any time using with the same `.env` and `docker-compose.yml`, because the configuration is overridden automatically when docker-sync is used.
+- You may run nodedock with or without docker-sync at any time using with the same `.env` and `docker-compose.yml`, because the configuration is overridden automatically when docker-sync is used.
 - You may inspect the `sync.sh` script to learn each of the commands and even add custom ones.
-- If a container cannot access the files on docker-sync, you may need to set a user on the Dockerfile of that container with an id of 1000 (this is the UID that nginx and php-fpm have configured on laradock). Alternatively, you may change the permissions to 777, but this is **not** recommended.
+- If a container cannot access the files on docker-sync, you may need to set a user on the Dockerfile of that container with an id of 1000 (this is the UID that nginx and node have configured on nodedock). Alternatively, you may change the permissions to 777, but this is **not** recommended.
 
 Visit the [docker-sync documentation](https://github.com/EugenMayer/docker-sync/wiki) for more details.
 
@@ -887,16 +845,6 @@ Make sure the ports for the services that you are trying to run (22, 80, 443, 33
 1. Make sure you've [changed the timezone](#Change-the-timezone).
 2. Stop and rebuild the containers (`docker-compose up -d --build <services>`)
 
-## I get MySQL connection refused
-
-This error sometimes happens because your Laravel application isn't running on the container localhost IP (Which is 127.0.0.1). Steps to fix it:
-
-* Option A
-  1. Check your running Laravel application IP by dumping `Request::ip()` variable using `dd(Request::ip())` anywhere on your application. The result is the IP of your Laravel container.
-  2. Change the `DB_HOST` variable on env with the IP that you received from previous step.
-* Option B
-   1. Change the `DB_HOST` value to the same name as the MySQL docker container. The Laradock docker-compose file currently has this as `mysql`
-
 ## I get stuck when building nginx on `fetch http://mirrors.aliyun.com/alpine/v3.5/main/x86_64/APKINDEX.tar.gz`
 
 As stated on [#749](https://github.com/laradock/laradock/issues/749#issuecomment-293296687), removing the line `RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/' /etc/apk/repositories` from `nginx/Dockerfile` solves the problem.
@@ -908,7 +856,6 @@ In China, the origin source of composer and npm is very slow. You can add `WORKS
 Example:
 ```bash
 WORKSPACE_NPM_REGISTRY=https://registry.npm.taobao.org
-WORKSPACE_COMPOSER_REPO_PACKAGIST=https://packagist.phpcomposer.com
 ```
 
 ## I get `Module build failed: Error: write EPIPE` while compiling react application
