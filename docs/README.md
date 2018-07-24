@@ -6,6 +6,8 @@
 
 A full NodeJS development environment for Docker.
 
+![Node + Docker](https://raw.githubusercontent.com/nodedock/nodedock/master/docs/node-docker.png)
+
 Includes pre-packaged Docker Images, all pre-configured to provide a wonderful Node development environment.
 
 This project is based on an awesome [Laradock](https://github.com/laradock/laradock) ([contributors](https://github.com/laradock/laradock/graphs/contributors))
