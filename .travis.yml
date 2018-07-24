@@ -1,0 +1,30 @@
+language: bash
+sudo: required
+services:
+  - docker
+
+env:
+  matrix:
+    - NODE_VERSION=8.11.3 BUILD_SERVICE=workspace
+    - NODE_VERSION=10.7.0 BUILD_SERVICE=workspace
+
+    - NODE_VERSION=8.11.3 BUILD_SERVICE=node
+    - NODE_VERSION=10.7.0 BUILD_SERVICE=node
+
+    - PHP_VERSION=NA BUILD_SERVICE=solr
+    - PHP_VERSION=NA BUILD_SERVICE="nginx mysql postgres postgres-postgis redis"
+    - PHP_VERSION=NA BUILD_SERVICE="adminer phpmyadmin"
+    - PHP_VERSION=NA BUILD_SERVICE="memcached beanstalkd beanstalkd-console rabbitmq elasticsearch mailhog maildev"
+
+# Installing a newer Docker version
+before_install:
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get -y install docker-ce
+  - docker version
+
+script: ./travis-build.sh
+
+notifications:
+  email: false
