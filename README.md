@@ -21,6 +21,12 @@ docker-compose logs -f
 
 The last one is optional.
 
+## Alternative Usage Example
+
+You can also declare the list of services you'd like to run using `NODEDOCK_SERVICES` variable in `.env` (you can create your own `.env` by copying `env-example` file).
+
+After that, you'll be able to use `start.sh`, `stop.sh`, `restart.sh` and `logs.sh` scripts which are located in the root directory of nodedock.
+
 ## Based on Laradock
 
 This project is based on awesome [Laradock](https://github.com/laradock/laradock) ([contributors](https://github.com/laradock/laradock/graphs/contributors))
