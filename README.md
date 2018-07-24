@@ -1,4 +1,4 @@
-# Nodedock
+# Nodedock <a href="https://travis-ci.org/nodedock/nodedock"><img src="https://travis-ci.org/nodedock/nodedock.svg?branch=master" alt="Build status"></a>
 
 Docker NodeJS development environment.
 
