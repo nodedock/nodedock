@@ -12,7 +12,7 @@ env:
     - NODE_VERSION=10.7.0 BUILD_SERVICE=node
 
     - NODE_VERSION=NA BUILD_SERVICE="nginx mysql postgres postgres-postgis redis"
-    - NODE_VERSION=NA BUILD_SERVICE="adminer phpmyadmin"
+    - NODE_VERSION=NA BUILD_SERVICE="adminer phpmyadmin pgadmin phpredisadmin"
     - NODE_VERSION=NA BUILD_SERVICE="memcached beanstalkd beanstalkd-console rabbitmq elasticsearch mailhog maildev"
 
 # Installing a newer Docker version
