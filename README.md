@@ -22,6 +22,8 @@ Open http://127.0.0.1/ to get a greeting from an example project :)
 
 You can check the logs using `./logs.sh` command to see what's going on during the project startup.
 
+See other examples [here](./examples)
+
 ## Quick Start
 
 You need to have a node project with `package.json` with `start` script definition as `node` container will run `npm start` command after start up.
