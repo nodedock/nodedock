@@ -59,7 +59,16 @@ if [ "$1" == "up" ] ; then
 
     print_style "Initializing Docker Compose\n" "info"
     shift # removing first argument
-    docker-compose up -d ${@}
+
+    while read -r line; do
+      VARNAME=$(echo ${line} | awk '{sub(/\=.*/,x)}1')
+
+      if [[ -z ${!VARNAME} ]]; then
+        declare -x ${line}
+      fi
+    done < <(egrep -v "(^#|^\s|^$)" .env)
+
+    docker-compose up -d ${NODEDOCK_SERVICES}
 
 elif [ "$1" == "down" ]; then
     print_style "Stopping Docker Compose\n" "info"

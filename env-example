@@ -4,7 +4,12 @@
 
 ### Services ##############################################
 
+# Defines which services ./start.sh command will run
 NODEDOCK_SERVICES=nginx node workspace
+
+# Defines which services ./start.sh command will be showing log for,
+# leave it empty if this is not needed
+NODEDOCK_LOG_AFTER_START=node
 
 ### Paths #################################################
 

@@ -4,6 +4,7 @@
 
 ```bash
 cd nodedock/
+cp env-example .env
 APP_CODE_PATH_HOST=./examples/simple/ docker-compose up -d node nginx
 ```
 

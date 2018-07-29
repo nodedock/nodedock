@@ -6,6 +6,7 @@ You need to install dependencies, per example you can do it running `yarn` local
 
 ```bash
 cd nodedock/
+cp env-example .env
 APP_CODE_PATH_HOST=./examples/nodemon/ docker-compose up -d node nginx
 ```
 

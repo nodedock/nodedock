@@ -15,6 +15,7 @@ I'm an ex-PHP developer, and I've used to use Laradock and similar solutions a l
 Just hit in a terminal:
 
 ```
+cp env-example .env
 APP_CODE_PATH_HOST=./examples/simple/ docker-compose up -d node nginx
 ```
 
