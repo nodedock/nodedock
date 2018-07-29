@@ -16,4 +16,4 @@ while read -r line; do
   fi
 done < <(egrep -v "(^#|^\s|^$)" .env)
 
-docker-compose exec mysql mysql -uroot -p${MYSQL_ROOT_PASSWORD} -Ddefault
+docker-compose exec postgres psql -U postgres
