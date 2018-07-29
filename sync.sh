@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This shell script is an optional tool to simplify
 # the installation and usage of nodedock with docker-sync.
@@ -14,6 +14,9 @@
 # Install docker-sync: ./sync.sh install
 # Start sync and services with nginx and mysql: ./sync.sh up nginx mysql
 # Stop containers and sync: ./sync.sh down
+
+set -e
+cd "$( dirname "${BASH_SOURCE[0]}" )"
 
 # prints colored text
 print_style () {
@@ -53,6 +56,11 @@ if [[ $# -eq 0 ]] ; then
 fi
 
 if [ "$1" == "up" ] ; then
+    if [ ! -f .env ]; then
+      echo "Having .env is required. Maybe you forgot to copy env-example?"
+      exit 1
+    fi
+
     print_style "Initializing Docker Sync\n" "info"
     print_style "May take a long time (15min+) on the first run\n" "info"
     docker-sync start;
