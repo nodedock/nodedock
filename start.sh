@@ -12,7 +12,7 @@ while read -r line; do
   VARNAME=$(echo ${line} | awk '{sub(/\=.*/,x)}1')
 
   if [[ -z ${!VARNAME} ]]; then
-    declare -x ${line}
+    declare -x "${line}"
   fi
 done < <(egrep -v "(^#|^\s|^$)" .env)
 
