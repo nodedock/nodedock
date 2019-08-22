@@ -830,6 +830,14 @@ docker-compose up ...
 
 *Note: If you faced any errors, try restarting Docker, and make sure you have no spaces in the `d4m-nfs-mounts.txt` file, and your `/etc/exports` file is clear.*
 
+## Puppeteer support
+
+If you are going to use puppeteer you have to set `PUPPETEER_SUPPORT=true` into `.env`. In case you have built (started) containers before you decided to use puppeteer, you should rebuild them first: 
+```bash
+docker-compose build --no-cache workspace node
+```
+then start everything regular way
+
 # Common Problems
 
 *Here's a list of the common problems you might face, and the possible solutions.*

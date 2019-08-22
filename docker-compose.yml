@@ -55,6 +55,7 @@ services:
           - PUID=${WORKSPACE_PUID}
           - PGID=${WORKSPACE_PGID}
           - TZ=${WORKSPACE_TIMEZONE}
+          - PUPPETEER_SUPPORT={$PUPPETEER_SUPPORT}
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       extra_hosts:
@@ -81,6 +82,7 @@ services:
           - INSTALL_IMAGE_OPTIMIZERS=${NODE_INSTALL_IMAGE_OPTIMIZERS}
           - INSTALL_IMAGEMAGICK=${NODE_INSTALL_IMAGEMAGICK}
           - NPM_START_SCRIPT=${NODE_NPM_START_SCRIPT}
+          - PUPPETEER_SUPPORT={$PUPPETEER_SUPPORT}
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       expose:
