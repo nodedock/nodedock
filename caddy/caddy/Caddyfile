@@ -1,11 +1,11 @@
 # Docs: https://caddyserver.com/docs/caddyfile
 0.0.0.0:80 {
     root /var/www/public
-    proxy / node:9000 php {
+    fastcgi / php-fpm:9000 php {
         index index.php
     }
 
-    # To handle .html extensions with laravel change ext to
+    # To handle .html extensions with nodevel change ext to
     # ext / .html
 
     rewrite {
@@ -26,21 +26,26 @@
     #}
 }
 
-laradock1.demo:80 {
+nodedock1.demo:80 {
     root /var/www/public
     # Create a Webhook in git.
     #git {
 	#repo https://github.com/xxx/xxx
     #    path /home/xxx
     #    #interval 60
-    #    hook  webhook laradock
+    #    hook  webhook nodedock
     #    hook_type   generic
     #}
 
 }
 
-laradock2.demo:80 {
+nodedock2.demo:80 {
     # Create a Proxy and cors.
     #proxy domain.com
 	#cors
+}
+
+nodedock3.demo:80 {
+    import authlist.conf
+    root /var/www/public
 }
