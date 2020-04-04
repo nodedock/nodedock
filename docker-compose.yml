@@ -74,6 +74,7 @@ services:
         context: ./node
         args:
           - NODE_VERSION=${NODE_VERSION}
+          - NODE_ENV=${NODE_ENV}
           - YARN_VERSION=${NODE_YARN_VERSION}
           - INSTALL_YARN=${NODE_INSTALL_YARN}
           - INSTALL_PG_CLIENT=${NODE_PG_CLIENT}
