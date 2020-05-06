@@ -1,29 +1,20 @@
 # Docs: https://caddyserver.com/docs/caddyfile
 0.0.0.0:80 {
-    root /var/www/public
-    fastcgi / php-fpm:9000 php {
-        index index.php
-    }
+  proxy / node:9000 {
+    transparent
+  }
+    
+}
 
-    # To handle .html extensions with nodevel change ext to
-    # ext / .html
+# Replace with your domain
+https://example.com {
+  proxy / node:9000 {
+    transparent
+  }
 
-    rewrite {
-        to {path} {path}/ /index.php?{query}
-    }
-    gzip
-    browse
-    log /var/log/caddy/access.log
-    errors /var/log/caddy/error.log
-    # Uncomment to enable TLS (HTTPS)
-    # Change the first list to listen on port 443 when enabling TLS
-    #tls self_signed
-
-    # To use Lets encrpt tls with a DNS provider uncomment these
-    # lines and change the provider as required
-    #tls {
-    #  dns cloudflare
-    #}
+  # Replace with your email  
+  #tls example@email.com
+    
 }
 
 nodedock1.demo:80 {
