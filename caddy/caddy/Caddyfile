@@ -6,6 +6,17 @@
     
 }
 
+# Replace with your domain
+https://example.com {
+  proxy / node:9000 {
+    transparent
+  }
+
+  # Replace with your email  
+  #tls example@email.com
+    
+}
+
 nodedock1.demo:80 {
     root /var/www/public
     # Create a Webhook in git.
