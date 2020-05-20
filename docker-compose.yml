@@ -409,9 +409,10 @@ services:
 
   ### ElasticSearch ########################################
   elasticsearch:
-    build: ./elasticsearch
-    args:
-      - ELK_VERSION=${ELK_VERSION}
+    build:
+      context: ./elasticsearch
+      args:
+        - ELK_VERSION=${ELK_VERSION}
     volumes:
       - elasticsearch:/usr/share/elasticsearch/data
     environment:
