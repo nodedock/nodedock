@@ -219,3 +219,6 @@ ELASTICSEARCH_HOST_TRANSPORT_PORT=9300
 
 ### PUPPETEER #############################################
 PUPPETEER_SUPPORT=false
+
+### ELK Stack ##################################################
+ELK_VERSION=7.5.1

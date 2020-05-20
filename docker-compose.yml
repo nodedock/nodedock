@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 networks:
   frontend:
@@ -31,401 +31,405 @@ volumes:
     driver: ${VOLUMES_DRIVER}
 
 services:
-
-### Workspace Utilities ##################################
-    workspace:
-      build:
-        context: ./workspace
-        args:
-          - NODE_VERSION=${NODE_VERSION}
-          - NODE_ENV=${NODE_ENV}
-          - YARN_VERSION=${WORKSPACE_YARN_VERSION}
-          - INSTALL_NODE=${WORKSPACE_INSTALL_NODE}
-          - NPM_REGISTRY=${WORKSPACE_NPM_REGISTRY}
-          - INSTALL_YARN=${WORKSPACE_INSTALL_YARN}
-          - INSTALL_NPM_GULP=${WORKSPACE_INSTALL_NPM_GULP}
-          - INSTALL_NPM_BOWER=${WORKSPACE_INSTALL_NPM_BOWER}
-          - INSTALL_NPM_VUE_CLI=${WORKSPACE_INSTALL_NPM_VUE_CLI}
-          - INSTALL_NPM_ANGULAR_CLI=${WORKSPACE_INSTALL_NPM_ANGULAR_CLI}
-          - INSTALL_WORKSPACE_SSH=${WORKSPACE_INSTALL_WORKSPACE_SSH}
-          - INSTALL_PYTHON=${WORKSPACE_INSTALL_PYTHON}
-          - INSTALL_IMAGE_OPTIMIZERS=${WORKSPACE_INSTALL_IMAGE_OPTIMIZERS}
-          - INSTALL_IMAGEMAGICK=${WORKSPACE_INSTALL_IMAGEMAGICK}
-          - INSTALL_LIBPNG=${WORKSPACE_INSTALL_LIBPNG}
-          - PUID=${WORKSPACE_PUID}
-          - PGID=${WORKSPACE_PGID}
-          - TZ=${WORKSPACE_TIMEZONE}
-          - PUPPETEER_SUPPORT={$PUPPETEER_SUPPORT}
-      volumes:
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      extra_hosts:
-        - "dockerhost:${DOCKER_HOST_IP}"
-      ports:
-        - "${WORKSPACE_SSH_PORT}:22"
-      tty: true
-      environment: {}
-      networks:
-        - frontend
-        - backend
-
-### NodeJS ##############################################
-    node:
-      build:
-        context: ./node
-        args:
-          - NODE_VERSION=${NODE_VERSION}
-          - NODE_ENV=${NODE_ENV}
-          - YARN_VERSION=${NODE_YARN_VERSION}
-          - INSTALL_YARN=${NODE_INSTALL_YARN}
-          - INSTALL_PG_CLIENT=${NODE_PG_CLIENT}
-          - INSTALL_INTL=${NODE_INSTALL_INTL}
-          - INSTALL_GHOSTSCRIPT=${NODE_INSTALL_GHOSTSCRIPT}
-          - INSTALL_IMAGE_OPTIMIZERS=${NODE_INSTALL_IMAGE_OPTIMIZERS}
-          - INSTALL_IMAGEMAGICK=${NODE_INSTALL_IMAGEMAGICK}
-          - NPM_START_SCRIPT=${NODE_NPM_START_SCRIPT}
-          - PUPPETEER_SUPPORT={$PUPPETEER_SUPPORT}
-      volumes:
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      expose:
-        - "9000"
-        - "9229"
-      extra_hosts:
-        - "dockerhost:${DOCKER_HOST_IP}"
-      environment:
-        - DOCKER_HOST=tcp://docker-in-docker:2375
-      depends_on:
-        - workspace
-      networks:
-        - backend
-      links:
-        - docker-in-docker
-
-### NGINX Server #########################################
-    nginx:
-      build:
-        context: ./nginx
-        args:
-          - NODE_UPSTREAM_CONTAINER=${NGINX_NODE_UPSTREAM_CONTAINER}
-          - NODE_UPSTREAM_PORT=${NGINX_NODE_UPSTREAM_PORT}
-      volumes:
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
-        - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
-      ports:
-        - "${NGINX_HOST_HTTP_PORT}:80"
-        - "${NGINX_HOST_HTTPS_PORT}:443"
-      depends_on:
-        - node
-      networks:
-        - frontend
-        - backend
-
-### Caddy Server #########################################
-    caddy:
-      build: ./caddy
-      volumes:
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        - ${CADDY_CUSTOM_CADDYFILE}:/etc/caddy
-        - ${CADDY_HOST_LOG_PATH}:/var/log/caddy
-        - ${DATA_PATH_HOST}:/root/.caddy
-      ports:
-        - "${CADDY_HOST_HTTP_PORT}:80"
-        - "${CADDY_HOST_HTTPS_PORT}:443"
-      depends_on:
-        - node
-      networks:
-        - frontend
-        - backend
-
-### Docker-in-Docker ################################################
-    docker-in-docker:
-      image: docker:dind
-      privileged: true
-      volumes:
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      expose:
-        - 2375
-      networks:
-        - backend
-
-### Certbot #########################################
-    certbot:
-      build:
-        context: ./certbot
-      volumes:
-        - ./data/certbot/certs/:/var/certs
-        - ./certbot/letsencrypt/:${APP_CODE_PATH_CONTAINER}/letsencrypt
-      environment:
-        - CN="fake.domain.com"
-        - EMAIL="fake.email@gmail.com"
-      networks:
-        - frontend
-
-### MySQL ################################################
-    mysql:
-      build:
-        context: ./mysql
-        args:
-          - MYSQL_VERSION=${MYSQL_VERSION}
-      environment:
-        - MYSQL_DATABASE=${MYSQL_DATABASE}
-        - MYSQL_USER=${MYSQL_USER}
-        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  ### Workspace Utilities ##################################
+  workspace:
+    build:
+      context: ./workspace
+      args:
+        - NODE_VERSION=${NODE_VERSION}
+        - NODE_ENV=${NODE_ENV}
+        - YARN_VERSION=${WORKSPACE_YARN_VERSION}
+        - INSTALL_NODE=${WORKSPACE_INSTALL_NODE}
+        - NPM_REGISTRY=${WORKSPACE_NPM_REGISTRY}
+        - INSTALL_YARN=${WORKSPACE_INSTALL_YARN}
+        - INSTALL_NPM_GULP=${WORKSPACE_INSTALL_NPM_GULP}
+        - INSTALL_NPM_BOWER=${WORKSPACE_INSTALL_NPM_BOWER}
+        - INSTALL_NPM_VUE_CLI=${WORKSPACE_INSTALL_NPM_VUE_CLI}
+        - INSTALL_NPM_ANGULAR_CLI=${WORKSPACE_INSTALL_NPM_ANGULAR_CLI}
+        - INSTALL_WORKSPACE_SSH=${WORKSPACE_INSTALL_WORKSPACE_SSH}
+        - INSTALL_PYTHON=${WORKSPACE_INSTALL_PYTHON}
+        - INSTALL_IMAGE_OPTIMIZERS=${WORKSPACE_INSTALL_IMAGE_OPTIMIZERS}
+        - INSTALL_IMAGEMAGICK=${WORKSPACE_INSTALL_IMAGEMAGICK}
+        - INSTALL_LIBPNG=${WORKSPACE_INSTALL_LIBPNG}
+        - PUID=${WORKSPACE_PUID}
+        - PGID=${WORKSPACE_PGID}
         - TZ=${WORKSPACE_TIMEZONE}
-      volumes:
-        - ${DATA_PATH_HOST}/mysql:/var/lib/mysql
-        - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
-      ports:
-        - "${MYSQL_PORT}:3306"
-      networks:
-        - backend
+        - PUPPETEER_SUPPORT={$PUPPETEER_SUPPORT}
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
+    ports:
+      - "${WORKSPACE_SSH_PORT}:22"
+    tty: true
+    environment: {}
+    networks:
+      - frontend
+      - backend
 
-### MariaDB ##############################################
-    mariadb:
-      build:
-        context: ./mariadb
-        args:
-          - http_proxy
-          - https_proxy
-          - no_proxy
-          - MARIADB_VERSION=${MARIADB_VERSION}
-      volumes:
-        - ${DATA_PATH_HOST}/mariadb:/var/lib/mysql
-        - ${MARIADB_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
-      ports:
-        - "${MARIADB_PORT}:3306"
-      environment:
-        - TZ=${WORKSPACE_TIMEZONE}
-        - MYSQL_DATABASE=${MARIADB_DATABASE}
-        - MYSQL_USER=${MARIADB_USER}
-        - MYSQL_PASSWORD=${MARIADB_PASSWORD}
-        - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
-      networks:
-        - backend
+  ### NodeJS ##############################################
+  node:
+    build:
+      context: ./node
+      args:
+        - NODE_VERSION=${NODE_VERSION}
+        - NODE_ENV=${NODE_ENV}
+        - YARN_VERSION=${NODE_YARN_VERSION}
+        - INSTALL_YARN=${NODE_INSTALL_YARN}
+        - INSTALL_PG_CLIENT=${NODE_PG_CLIENT}
+        - INSTALL_INTL=${NODE_INSTALL_INTL}
+        - INSTALL_GHOSTSCRIPT=${NODE_INSTALL_GHOSTSCRIPT}
+        - INSTALL_IMAGE_OPTIMIZERS=${NODE_INSTALL_IMAGE_OPTIMIZERS}
+        - INSTALL_IMAGEMAGICK=${NODE_INSTALL_IMAGEMAGICK}
+        - NPM_START_SCRIPT=${NODE_NPM_START_SCRIPT}
+        - PUPPETEER_SUPPORT={$PUPPETEER_SUPPORT}
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+    expose:
+      - "9000"
+      - "9229"
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
+    environment:
+      - DOCKER_HOST=tcp://docker-in-docker:2375
+    depends_on:
+      - workspace
+    networks:
+      - backend
+    links:
+      - docker-in-docker
 
-### PostgreSQL ###########################################
-    postgres:
-      build: ./postgres
-      volumes:
-        - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
-        - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
-      ports:
-        - "${POSTGRES_PORT}:5432"
-      environment:
-        - POSTGRES_DB=${POSTGRES_DB}
-        - POSTGRES_USER=${POSTGRES_USER}
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      networks:
-        - backend
+  ### NGINX Server #########################################
+  nginx:
+    build:
+      context: ./nginx
+      args:
+        - NODE_UPSTREAM_CONTAINER=${NGINX_NODE_UPSTREAM_CONTAINER}
+        - NODE_UPSTREAM_PORT=${NGINX_NODE_UPSTREAM_PORT}
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+      - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
+      - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
+    ports:
+      - "${NGINX_HOST_HTTP_PORT}:80"
+      - "${NGINX_HOST_HTTPS_PORT}:443"
+    depends_on:
+      - node
+    networks:
+      - frontend
+      - backend
 
-### PostgreSQL PostGis ###################################
-    postgres-postgis:
-      build: ./postgres-postgis
-      volumes:
-        - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
-      ports:
-        - "${POSTGRES_PORT}:5432"
-      environment:
-        - POSTGRES_DB=${POSTGRES_DB}
-        - POSTGRES_USER=${POSTGRES_USER}
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      networks:
-        - backend
+  ### Caddy Server #########################################
+  caddy:
+    build: ./caddy
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+      - ${CADDY_CUSTOM_CADDYFILE}:/etc/caddy
+      - ${CADDY_HOST_LOG_PATH}:/var/log/caddy
+      - ${DATA_PATH_HOST}:/root/.caddy
+    ports:
+      - "${CADDY_HOST_HTTP_PORT}:80"
+      - "${CADDY_HOST_HTTPS_PORT}:443"
+    depends_on:
+      - node
+    networks:
+      - frontend
+      - backend
 
-### RabbitMQ #############################################
-    rabbitmq:
-      build: ./rabbitmq
-      ports:
-        - "${RABBITMQ_NODE_HOST_PORT}:5672"
-        - "${RABBITMQ_MANAGEMENT_HTTP_HOST_PORT}:15672"
-        - "${RABBITMQ_MANAGEMENT_HTTPS_HOST_PORT}:15671"
-      privileged: true
-      environment:
-        - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
-        - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
-      depends_on:
-        - node
-      networks:
-        - backend
+  ### Docker-in-Docker ################################################
+  docker-in-docker:
+    image: docker:dind
+    privileged: true
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+    expose:
+      - 2375
+    networks:
+      - backend
 
-### phpMyAdmin ###########################################
-    phpmyadmin:
-      build: ./phpmyadmin
-      environment:
-        - PMA_ARBITRARY=1
-        - MYSQL_USER=${PMA_USER}
-        - MYSQL_PASSWORD=${PMA_PASSWORD}
-        - MYSQL_ROOT_PASSWORD=${PMA_ROOT_PASSWORD}
-      ports:
-        - "${PMA_PORT}:80"
-      depends_on:
-        - "${PMA_DB_ENGINE}"
-      networks:
-        - frontend
-        - backend
+  ### Certbot #########################################
+  certbot:
+    build:
+      context: ./certbot
+    volumes:
+      - ./data/certbot/certs/:/var/certs
+      - ./certbot/letsencrypt/:${APP_CODE_PATH_CONTAINER}/letsencrypt
+    environment:
+      - CN="fake.domain.com"
+      - EMAIL="fake.email@gmail.com"
+    networks:
+      - frontend
 
-### Adminer ###########################################
-    adminer:
-      build:
-        context: ./adminer
-        args:
-          - INSTALL_MSSQL=${ADM_INSTALL_MSSQL}
-      ports:
-        - "${ADM_PORT}:8080"
-      depends_on:
-        - node
-      networks:
-        - frontend
-        - backend
+  ### MySQL ################################################
+  mysql:
+    build:
+      context: ./mysql
+      args:
+        - MYSQL_VERSION=${MYSQL_VERSION}
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - TZ=${WORKSPACE_TIMEZONE}
+    volumes:
+      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql
+      - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+    ports:
+      - "${MYSQL_PORT}:3306"
+    networks:
+      - backend
 
-### pgAdmin ##############################################
-    pgadmin:
-      build: ./pgadmin
-      ports:
-        - "5050:5050"
-      volumes:
-        - ${DATA_PATH_HOST}/pgadmin-backup:/var/lib/pgadmin/storage/pgadmin4
-      depends_on:
-        - postgres
-      networks:
-        - frontend
-        - backend
+  ### MariaDB ##############################################
+  mariadb:
+    build:
+      context: ./mariadb
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
+        - MARIADB_VERSION=${MARIADB_VERSION}
+    volumes:
+      - ${DATA_PATH_HOST}/mariadb:/var/lib/mysql
+      - ${MARIADB_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+    ports:
+      - "${MARIADB_PORT}:3306"
+    environment:
+      - TZ=${WORKSPACE_TIMEZONE}
+      - MYSQL_DATABASE=${MARIADB_DATABASE}
+      - MYSQL_USER=${MARIADB_USER}
+      - MYSQL_PASSWORD=${MARIADB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    networks:
+      - backend
 
-### Redis ################################################
-    redis:
-      build: ./redis
-      volumes:
-        - ${DATA_PATH_HOST}/redis:/data
-      ports:
-        - "${REDIS_PORT}:6379"
-      networks:
-        - backend
+  ### PostgreSQL ###########################################
+  postgres:
+    build: ./postgres
+    volumes:
+      - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
+      - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - backend
 
-### PHPRedisAdmin ################################################
-    phpredisadmin:
-      image: erikdubbelboer/phpredisadmin:latest
-      environment:
-        - ADMIN_USER=${REDIS_WEBUI_USERNAME}
-        - ADMIN_PASS=${REDIS_WEBUI_PASSWORD}
-        - REDIS_1_HOST=${REDIS_WEBUI_CONNECT_HOST}
-        - REDIS_1_PORT=${REDIS_WEBUI_CONNECT_PORT}
-      networks:
-        - backend
-      ports:
-        - "${REDIS_WEBUI_PORT}:80"
-      depends_on:
-        - redis
+  ### PostgreSQL PostGis ###################################
+  postgres-postgis:
+    build: ./postgres-postgis
+    volumes:
+      - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - backend
 
-### Mailhog ################################################
-    mailhog:
-      build: ./mailhog
-      ports:
-        - "1025:1025"
-        - "8025:8025"
-      networks:
-        - frontend
-        - backend
+  ### RabbitMQ #############################################
+  rabbitmq:
+    build: ./rabbitmq
+    ports:
+      - "${RABBITMQ_NODE_HOST_PORT}:5672"
+      - "${RABBITMQ_MANAGEMENT_HTTP_HOST_PORT}:15672"
+      - "${RABBITMQ_MANAGEMENT_HTTPS_HOST_PORT}:15671"
+    privileged: true
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    depends_on:
+      - node
+    networks:
+      - backend
 
-### MailDev ##############################################
-    maildev:
-      build: ./maildev
-      ports:
-        - "${MAILDEV_HTTP_PORT}:80"
-        - "${MAILDEV_SMTP_PORT}:25"
-      networks:
-        - frontend
-        - backend
+  ### phpMyAdmin ###########################################
+  phpmyadmin:
+    build: ./phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - MYSQL_USER=${PMA_USER}
+      - MYSQL_PASSWORD=${PMA_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${PMA_ROOT_PASSWORD}
+    ports:
+      - "${PMA_PORT}:80"
+    depends_on:
+      - "${PMA_DB_ENGINE}"
+    networks:
+      - frontend
+      - backend
 
-### Memcached ############################################
-    memcached:
-      build: ./memcached
-      volumes:
-        - ${DATA_PATH_HOST}/memcached:/var/lib/memcached
-      ports:
-        - "${MEMCACHED_HOST_PORT}:11211"
-      depends_on:
-        - node
-      networks:
-        - backend
+  ### Adminer ###########################################
+  adminer:
+    build:
+      context: ./adminer
+      args:
+        - INSTALL_MSSQL=${ADM_INSTALL_MSSQL}
+    ports:
+      - "${ADM_PORT}:8080"
+    depends_on:
+      - node
+    networks:
+      - frontend
+      - backend
 
-### MongoDB ##############################################
-    mongo:
-      build: ./mongo
-      ports:
-        - "${MONGODB_PORT}:27017"
-      volumes:
-        - ${DATA_PATH_HOST}/mongo:/data/db
-      networks:
-        - backend
+  ### pgAdmin ##############################################
+  pgadmin:
+    build: ./pgadmin
+    ports:
+      - "5050:5050"
+    volumes:
+      - ${DATA_PATH_HOST}/pgadmin-backup:/var/lib/pgadmin/storage/pgadmin4
+    depends_on:
+      - postgres
+    networks:
+      - frontend
+      - backend
 
-### MongoWebUI ################################################
-    mongo-webui:
-      build:
-        context: ./mongo-webui
-      restart: always
-      environment:
-        - ROOT_URL=${MONGO_WEBUI_ROOT_URL}
-        - MONGO_URL=${MONGO_WEBUI_MONGO_URL}
-        - INSTALL_MONGO=${MONGO_WEBUI_INSTALL_MONGO}
-      volumes:
-        - ${DATA_PATH_HOST}/mongo-webui:/data/db
-      ports:
-        - "${MONGO_WEBUI_PORT}:3000"
-      networks:
-        - backend
-      depends_on:
-        - mongo
+  ### Redis ################################################
+  redis:
+    build: ./redis
+    volumes:
+      - ${DATA_PATH_HOST}/redis:/data
+    ports:
+      - "${REDIS_PORT}:6379"
+    networks:
+      - backend
 
-### RethinkDB ##############################################
-    rethinkdb:
-      build: ./rethinkdb
-      ports:
-        - "${RETHINKDB_PORT}:8080"
-      volumes:
-        - ${DATA_PATH_HOST}/rethinkdb:/data/rethinkdb_data
-      networks:
-        - backend
+  ### PHPRedisAdmin ################################################
+  phpredisadmin:
+    image: erikdubbelboer/phpredisadmin:latest
+    environment:
+      - ADMIN_USER=${REDIS_WEBUI_USERNAME}
+      - ADMIN_PASS=${REDIS_WEBUI_PASSWORD}
+      - REDIS_1_HOST=${REDIS_WEBUI_CONNECT_HOST}
+      - REDIS_1_PORT=${REDIS_WEBUI_CONNECT_PORT}
+    networks:
+      - backend
+    ports:
+      - "${REDIS_WEBUI_PORT}:80"
+    depends_on:
+      - redis
 
-### Beanstalkd ###########################################
-    beanstalkd:
-      build: ./beanstalkd
-      ports:
-        - "${BEANSTALKD_HOST_PORT}:11300"
-      privileged: true
-      depends_on:
-        - node
-      networks:
-        - backend
+  ### Mailhog ################################################
+  mailhog:
+    build: ./mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - frontend
+      - backend
 
-### Beanstalkd Console ###################################
-    beanstalkd-console:
-      build: ./beanstalkd-console
-      ports:
-        - "${BEANSTALKD_CONSOLE_HOST_PORT}:2080"
-      depends_on:
-        - beanstalkd
-      networks:
-        - backend
+  ### MailDev ##############################################
+  maildev:
+    build: ./maildev
+    ports:
+      - "${MAILDEV_HTTP_PORT}:80"
+      - "${MAILDEV_SMTP_PORT}:25"
+    networks:
+      - frontend
+      - backend
 
-### ElasticSearch ########################################
-    elasticsearch:
-      build: ./elasticsearch
-      volumes:
-        - elasticsearch:/usr/share/elasticsearch/data
-      environment:
-        - cluster.name=nodedock-cluster
-        - bootstrap.memory_lock=true
-        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      ulimits:
-        memlock:
-          soft: -1
-          hard: -1
-      ports:
-        - "${ELASTICSEARCH_HOST_HTTP_PORT}:9200"
-        - "${ELASTICSEARCH_HOST_TRANSPORT_PORT}:9300"
-      depends_on:
-        - node
-      networks:
-        - frontend
-        - backend
+  ### Memcached ############################################
+  memcached:
+    build: ./memcached
+    volumes:
+      - ${DATA_PATH_HOST}/memcached:/var/lib/memcached
+    ports:
+      - "${MEMCACHED_HOST_PORT}:11211"
+    depends_on:
+      - node
+    networks:
+      - backend
+
+  ### MongoDB ##############################################
+  mongo:
+    build: ./mongo
+    ports:
+      - "${MONGODB_PORT}:27017"
+    volumes:
+      - ${DATA_PATH_HOST}/mongo:/data/db
+    networks:
+      - backend
+
+  ### MongoWebUI ################################################
+  mongo-webui:
+    build:
+      context: ./mongo-webui
+    restart: always
+    environment:
+      - ROOT_URL=${MONGO_WEBUI_ROOT_URL}
+      - MONGO_URL=${MONGO_WEBUI_MONGO_URL}
+      - INSTALL_MONGO=${MONGO_WEBUI_INSTALL_MONGO}
+    volumes:
+      - ${DATA_PATH_HOST}/mongo-webui:/data/db
+    ports:
+      - "${MONGO_WEBUI_PORT}:3000"
+    networks:
+      - backend
+    depends_on:
+      - mongo
+
+  ### RethinkDB ##############################################
+  rethinkdb:
+    build: ./rethinkdb
+    ports:
+      - "${RETHINKDB_PORT}:8080"
+    volumes:
+      - ${DATA_PATH_HOST}/rethinkdb:/data/rethinkdb_data
+    networks:
+      - backend
+
+  ### Beanstalkd ###########################################
+  beanstalkd:
+    build: ./beanstalkd
+    ports:
+      - "${BEANSTALKD_HOST_PORT}:11300"
+    privileged: true
+    depends_on:
+      - node
+    networks:
+      - backend
+
+  ### Beanstalkd Console ###################################
+  beanstalkd-console:
+    build: ./beanstalkd-console
+    ports:
+      - "${BEANSTALKD_CONSOLE_HOST_PORT}:2080"
+    depends_on:
+      - beanstalkd
+    networks:
+      - backend
+
+  ### ElasticSearch ########################################
+  elasticsearch:
+    build:
+      context: ./elasticsearch
+      args:
+        - ELK_VERSION=${ELK_VERSION}
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+    environment:
+      - cluster.name=laradock-cluster
+      - node.name=laradock-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - cluster.initial_master_nodes=laradock-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "${ELASTICSEARCH_HOST_HTTP_PORT}:9200"
+      - "${ELASTICSEARCH_HOST_TRANSPORT_PORT}:9300"
+    depends_on:
+      - node
+    networks:
+      - frontend
+      - backend
