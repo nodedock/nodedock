@@ -1,6 +1,6 @@
 ARG NODE_VERSION=${NODE_VERSION}
 
-FROM phusion/baseimage:latest
+FROM phusion/baseimage:bionic-1.0.0
 
 # Set Environment Variables
 ENV DEBIAN_FRONTEND noninteractive
