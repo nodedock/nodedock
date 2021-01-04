@@ -416,11 +416,11 @@ services:
     volumes:
       - elasticsearch:/usr/share/elasticsearch/data
     environment:
-      - cluster.name=laradock-cluster
-      - node.name=laradock-node
+      - cluster.name=nodedock-cluster
+      - node.name=nodedock-node
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - cluster.initial_master_nodes=laradock-node
+      - cluster.initial_master_nodes=nodedock-node
     ulimits:
       memlock:
         soft: -1
